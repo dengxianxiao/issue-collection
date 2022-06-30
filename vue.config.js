@@ -1,10 +1,31 @@
 const { defineConfig } = require('@vue/cli-service')
+const path = require('path')
+const UploadFileToAliyunPlugin = require('./src/plugins/uploadFileToAliyunPlugin')
+
 module.exports = defineConfig({
   transpileDependencies: true,
   publicPath: './',
   // outputDir: 'dist',
   // assetsDir: 'static',
   lintOnSave: true,
+  configureWebpack: config => {
+    const plugins = []
+    if (process.env.NODE_ENV === 'production') {
+      const uploadFileToAliyunPlugin = new UploadFileToAliyunPlugin({ folderPath: path.join(__dirname, './dist/cdnImg/') })
+      plugins.push(uploadFileToAliyunPlugin)
+    }
+    // 配置别名
+    Object.assign(config.resolve, {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+        assets: path.resolve(__dirname, './src/assets'),
+        plugins: path.resolve(__dirname, './src/plugins')
+      }
+    })
+    return {
+      plugins
+    }
+  },
   chainWebpack: config => {
     // cdn包
     config.externals({
@@ -19,12 +40,12 @@ module.exports = defineConfig({
       .test(/\.(jpg|png|gif)$/)
       .set('parser', {
         dataUrlCondition: {
-          maxSize: 10 * 1024 // 10k
+          maxSize: 4096 // 2k
         }
       })
       .set('generator', {
         filename: '[name].[hash].[ext]',
-        publicPath: process.env.NODE_ENV === 'production' ? 'https://oss.xx.com/img/' : 'cdnImg/', // cdn地址
+        publicPath: process.env.NODE_ENV === 'production' ? 'https://dxx-images.oss-cn-guangzhou.aliyuncs.com/' : 'cdnImg/', // cdn地址
         outputPath: 'cdnImg' // cdn图片
       })
       .end()
