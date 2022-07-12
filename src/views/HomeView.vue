@@ -21,6 +21,10 @@ export default {
         {
           name: 'img标签onerror事件',
           path: '/imgOnerror'
+        },
+        {
+          name: 'videoPlay',
+          path: '/videoPlay'
         }
       ]
     }

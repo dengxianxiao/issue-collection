@@ -22,6 +22,11 @@ const routes = [
     path: '/imgOnerror',
     name: 'imgOnerror',
     component: () => import(/* webpackChunkName: "imgOnerror" */ '../views/issues/imgOnerror.vue')
+  },
+  {
+    path: '/videoPlay',
+    name: 'videoPlay',
+    component: () => import(/* webpackChunkName: "videoPlay" */ '../views/issues/videoPlay.vue')
   }
 ]
 
